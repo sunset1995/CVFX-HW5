@@ -61,29 +61,6 @@ def saliency_sift_stop_motion(img_paths, model='homography', thres=100,
 
         Ms.append(M)
 
-        # # Warp according to homography
-        # height, width = img1.shape[:2]
-        # img1_warp = cv2.warpPerspective(img1, M, (width, height))
-
-        # # Only move non saliency part
-        # mask = saliency2 > fix_saliency_thres
-        # img1_warp[mask] = img2[mask]
-
-        # # Finding maximum bbox
-        # bbox = np.array([
-        #     [0, 0, 1], [img1.shape[1], 0, 1],
-        #     [img1.shape[1], img1.shape[0], 1], [0, img1.shape[0], 1]
-        # ], np.float32)
-        # bbox = M.dot(bbox.T).T
-        # bbox = bbox[:, :2] / bbox[:, [2]]
-        # xmin = int(max(0, bbox[0, 0], bbox[3, 0]))
-        # xmax = int(min(img1.shape[1], img2.shape[1], bbox[1, 0], bbox[2, 0]))
-        # ymin = int(max(0, bbox[0, 1], bbox[1, 1]))
-        # ymax = int(min(img1.shape[0], img2.shape[0], bbox[2, 1], bbox[3, 1]))
-
-        # img1_warp = img1_warp[ymin:ymax, xmin:xmax]
-        # img2 = img2[ymin:ymax, xmin:xmax]
-
     # Align all images with middle frame
     height, width = images[-1].shape[:2]
     M = [
