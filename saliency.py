@@ -12,7 +12,7 @@ from saliency_network import Unet
 
 
 class SliencyModel():
-    def __init__(self, pth, device):
+    def __init__(self, pth='saliency.pth', device='cpu'):
         self.device = torch.device(device)
         state_dict = torch.load(pth, map_location=self.device)
         model = Unet().to(self.device)
