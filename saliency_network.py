@@ -36,34 +36,14 @@ class Unet(nn.Module):
                                         out_channel=1,
                                         mode='C'))
 
-    def forward(self, *input):
-        if len(input) == 2:
-            x = input[0]
-            tar = input[1]
-            test_mode = False
-        if len(input) == 3:
-            x = input[0]
-            tar = input[1]
-            test_mode = input[2]
-        if len(input) == 1:
-            x = input[0]
-            tar = None
-            test_mode = True
+    def forward(self, x):
         en_out = self.encoder(x)
         dec = None
         pred = []
         for i in range(6):
-            # print(En_out[5 - i].size())
             dec, _pred = self.decoder[i](en_out[5 - i], dec)
             pred.append(_pred)
-        loss = 0
-        if not test_mode:
-            for i in range(6):
-                loss += F.binary_cross_entropy(pred[5 - i], tar) * self.cfg['loss_ratio'][5 - i]
-                # print(float(loss))
-                if tar.size()[2] > 28:
-                    tar = F.max_pool2d(tar, 2, 2)
-        return pred, loss
+        return pred[-1], en_out[0]
 
 
 def make_layers(cfg, in_channels):

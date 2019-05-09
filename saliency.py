@@ -23,7 +23,7 @@ class SliencyModel():
             transforms.Resize((224, 224)),
             transforms.ToTensor()])
 
-    def compute_saliency(self, pilimg):
+    def compute_saliency(self, pilimg, ret_feature=False):
         pilimg = pilimg.convert('RGB')
         post_transform = transforms.Compose([
             transforms.ToPILImage(),
@@ -31,14 +31,19 @@ class SliencyModel():
 
         with torch.no_grad():
             x = self.pre_transform(pilimg).unsqueeze(0).to(self.device)
-            pred, loss = self.model(x)
-            saliency = post_transform(pred[5].squeeze(0))
+            pred, features = self.model(x)
+            saliency = post_transform(pred.squeeze(0))
+            features = features.squeeze(0).cpu().numpy()
 
+        if ret_feature:
+            return saliency, features
         return saliency
 
 
 if __name__ == '__main__':
 
+    import os
+    import glob
     import argparse
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -47,13 +52,21 @@ if __name__ == '__main__':
                              "https://drive.google.com/drive/folders/1s4M-_SnCPMj_2rsMkSy3pLnLQcgRakAe?usp=sharing")
     parser.add_argument('--device', default='cpu',
                         help="Device to run the model")
-    parser.add_argument('--img', required=True,
+    parser.add_argument('--imgs', required=True,
                         help="Input image")
-    parser.add_argument('--out', required=True,
-                        help="Output saliency map")
     args = parser.parse_args()
 
-    img = Image.open(args.img).convert('RGB')
+    print('Preparing saliency model')
     model = SliencyModel(args.pth, args.device)
-    saliency = model.compute_saliency(img)
-    Image.blend(img, saliency.convert('RGB'), alpha=0.8).save(args.out)
+
+    for path in glob.glob(args.imgs):
+        print('Processing', path)
+        out_saliency = path[:-4] + '_saliency.png'
+        out_features = path[:-4] + '_features.npy'
+        out_blend = path[:-4] + '_saliency.jpg'
+        img = Image.open(path).convert('RGB')
+        saliency, features = model.compute_saliency(img, ret_feature=True)
+        saliency.save(out_saliency)
+        Image.blend(img, saliency.convert('RGB'), alpha=0.8).save(out_blend)
+        np.save(out_features, features)
+        print(features.min(), features.max(), features.shape)
