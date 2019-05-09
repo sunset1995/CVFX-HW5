@@ -62,11 +62,8 @@ if __name__ == '__main__':
     for path in glob.glob(args.imgs):
         print('Processing', path)
         out_saliency = path[:-4] + '_saliency.png'
-        out_features = path[:-4] + '_features.npy'
         out_blend = path[:-4] + '_saliency.jpg'
         img = Image.open(path).convert('RGB')
         saliency, features = model.compute_saliency(img, ret_feature=True)
         saliency.save(out_saliency)
         Image.blend(img, saliency.convert('RGB'), alpha=0.8).save(out_blend)
-        np.save(out_features, features)
-        print(features.min(), features.max(), features.shape)
