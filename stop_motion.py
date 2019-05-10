@@ -105,6 +105,7 @@ if __name__ == '__main__':
     parser.add_argument('--out_match_format')
     parser.add_argument('--mode', choices=['raw', 'saliency_sift'], default='saliency_sift')
     parser.add_argument('--model', choices=['homography', 'translation', 'affine'], default='homography')
+    parser.add_argument('--fps', default=4, type=int)
     args = parser.parse_args()
 
     # Read all images
@@ -128,7 +129,7 @@ if __name__ == '__main__':
         raise NotImplementedError()
 
     # Saved result as gif
-    imageio.mimsave(args.out, images, 'GIF-FI')
+    imageio.mimsave(args.out, images, 'GIF-FI', palettesize=64, fps=args.fps)
     if args.out_match_format:
         for i in range(len(match_imgs)):
             imageio.imsave(args.out_match_format % i, match_imgs[i])
