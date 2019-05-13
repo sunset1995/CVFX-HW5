@@ -57,7 +57,25 @@ We show the result by different alignment algorithm. The translation model have 
 
 
 ### Stop Motion
-The implementation of stop motion effect is very similar to motion parallax. The only different is that we apply the same process like motion parallax
+The implementation of stop motion effect is very similar to motion parallax. The only different is that we apply the same process like motion parallax in each adjacency frames and align all the image to the middle frame.
+
+We first showing a case `mos burger` to depicting the different of each alignment models:
+
+| Do nothing | Align by translation (DoF=2) | Align by affine (DoF=5) | Align by homography (DoF=8) |
+| :--------: | :-----------: | :-----------: | :-----------: |
+| ![](imgs/stop_motion/mos_burger/out_raw.gif) | ![](imgs/stop_motion/mos_burger/out_trans.gif) (impossible to model) | ![](imgs/stop_motion/mos_burger/out_affine.gif) (table center fix) | ![](imgs/stop_motion/mos_burger/out.gif) (table plane fix) |
+
+Result explanation:
+- **Align by translation:** in this failre example, the foreground features are rotate in the image plane and thus make it impossible to model by only shift the image.
+- **Align by affine:** the affine alignment can model image shift, scale and inplane rotation. As a result, fix the center of the table and make it look like rotate alone the table center.
+- **Align by homography:** the homography can model plane to plane transform in 3D space which make the table plane fix in the result.
+
+<br>
+Next we want to show a succesful example which the image plane is align with the gravity direction and thus the foreground features can easily be modeled by affine transform.
+
+| Do nothing | Align by affine (DoF=5) |
+| :--------: | :-----------: |
+| ![](imgs/stop_motion/rose/out_raw.gif) | ![](imgs/stop_motion/rose/out_affine.gif) |
 
 
 ### Live Photo
