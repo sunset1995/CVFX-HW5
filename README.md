@@ -1,15 +1,64 @@
-# Sailency Based Multi-View 3D Visual Effect
+# CVFX Homework5 Team11
 
-This is NTHU CVFX course project 5 of `team 11`. Here we present a ...
+This is NTHU CVFX course project 5 of `team 11`. Here we use saliency mask to help crating many types of *multi-view 3D visual effects* including:
+- motion parallax
+- stop motion
+- live photo
+Also with the help of saliency mask, we can post-processing the image for to fix the color of certain pixels and thus enhance the final effect (detail describe in below).
 
-## Conventional method
 
-## Saliency Mask
+## Saliency mask
+Saliency is defined by the most noticeable part in the image for a human. The use of saliency mask in this multi-view visual effects project is obivious. We use the mask the help deciding which features to track or filter, instead of defining rule (e.g. the translation of the features) to classify the detected features into foreground and background.
 
-## Application
+We use a state-of-the-art saliency prediction model, PiCANet ([paper](https://arxiv.org/abs/1708.06433), [github](https://github.com/Ugness/PiCANet-Implementation), Liu et al., CVPR'18), to yield saliency mask of each image for later 3D visual effects.
+
+
+## Multi-view 3D visual effects
+
+In below, we will present the results of each effect and briefly describe them, showing the results of different setting.
+
 ### Motion Parallax
+In this effect, we want to align the two images such that the main role, the saliency, move as little as possible. To to this, we use the saliency mask the filter all non foreground sift features and align the two images based on the features inside the saliency mask.
+
+The first example is a `city caffe`, if we simply stack the two image without doing anything we will get:
+
+| Img1 | Img2 | Do nothing |
+| :--: | :--: | :--: |
+| ![](imgs/motion_parallax/city_caffe/img0.jpg) | ![](imgs/motion_parallax/city_caffe/img1.jpg) | ![](imgs/motion_parallax/city_caffe/out_raw.gif) |
+
+We use saliency mask to keep sift features of the `city caffe`. Note that the saliency masks are actually a grey images, we blend them with the original color image for better visualization:
+
+| Saliency of Img1 | Saliency of Img2 | Keeped SIFT features |
+| :--------------: | :--------------: | :------------------: |
+| ![](imgs/motion_parallax/city_caffe/img0_saliency.jpg) | ![](imgs/motion_parallax/city_caffe/img1_saliency.jpg) | ![](imgs/motion_parallax/city_caffe/out_match.jpg) |
+
+Finally, we align Img1 to Img2 by homography and also showing the result of fixing pixels in saliency region:
+
+| Do nothing | Align | Fix saliency pixels |
+| :--------: | :---: | :-----------------: |
+| ![](imgs/motion_parallax/city_caffe/out_raw.gif) | ![](imgs/motion_parallax/city_caffe/out.gif) | ![](imgs/motion_parallax/city_caffe/out_fix_saliency.gif) |
+
+
+Yet another example of motion parallax:
+
+| Img1 | Img2 | Do nothing |
+| :--: | :--: | :--: |
+| ![](imgs/motion_parallax/cats/img0.jpg) | ![](imgs/motion_parallax/cats/img1.jpg) | ![](imgs/motion_parallax/cats/out_raw.gif) |
+
+| Saliency of Img1 | Saliency of Img2 | Keeped SIFT features |
+| :--------------: | :--------------: | :------------------: |
+| ![](imgs/motion_parallax/cats/img0_saliency.jpg) | ![](imgs/motion_parallax/cats/img1_saliency.jpg) | ![](imgs/motion_parallax/cats/out_match.jpg) |
+
+We show the result by different alignment algorithm. The translation model have 2 degree of freedom and can only left/right/top/down shift the image. The affine model have dof=5 and can translate, scale and inplane rotate the image. The homography model is the strongest and can align features on different 3D planes. Please *Stop Motion* effect for better understanding the different of the three alignment models.
+
+| Align by translation (DoF=2) | Align by affine (DoF=5) | Align by homography (DoF=8) |
+| :--------: | :---: | :-----------------: |
+| ![](imgs/motion_parallax/cats/out_translation.gif) | ![](imgs/motion_parallax/cats/out_affine.gif) | ![](imgs/motion_parallax/cats/out.gif) |
+
 
 ### Stop Motion
+The implementation of stop motion effect is very similar to motion parallax. The only different is that we apply the same process like motion parallax
+
 
 ### Live Photo
 - Column 1 shows the saliency maps for all frames.
@@ -38,6 +87,3 @@ This is NTHU CVFX course project 5 of `team 11`. Here we present a ...
 | :------: | :------: | :------------: | :--------------: | :------------------: | :------: |
 |  Result  | ![](imgs/live_photo/tissue/saliency.gif) | ![](imgs/live_photo/tissue/out_raw.gif) | ![](imgs/live_photo/tissue/out.gif) | ![](imgs/live_photo/tissue/out_rgb.gif) | ![](imgs/live_photo/tissue/out_saliency.gif) |
 |  BG mask | | | |  ![](imgs/live_photo/tissue/out_rgb.png) | ![](imgs/live_photo/tissue/out_saliency.png) |
-
-
-## Limitation & Disccusion
