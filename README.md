@@ -19,5 +19,10 @@ This is NTHU CVFX course project 5 of `team 11`. Here we present a ...
 |  BG mask | | | |  ![](imgs/live_photo/mediatek/out_rgb.png) | ![](imgs/live_photo/mediatek/out_saliency.png) |
 
 #### Example: tissue
+|          | saliency |     no align   |    no fix BG   |  w/ RGB variance | w/ union of saliency |
+| :------: | :------: | :------------: | :--------------: | :------------------: | :------: |
+|  Result  | ![](imgs/live_photo/tissue/saliency.gif) | ![](imgs/live_photo/tissue/out_raw.gif) | ![](imgs/live_photo/tissue/out.gif) | ![](imgs/live_photo/tissue/out_rgb.gif) | ![](imgs/live_photo/tissue/out_saliency.gif) |
+|  BG mask | | | |  ![](imgs/live_photo/tissue/out_rgb.png) | ![](imgs/live_photo/tissue/out_saliency.png) |
+
 
 ## Limitation & Disccusion
