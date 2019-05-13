@@ -12,9 +12,10 @@ This is NTHU CVFX course project 5 of `team 11`. Here we present a ...
 ### Stop Motion
 
 ### Live Photo
+- For previous 2 tasks, we use saliency mask to filter out all non-salient sift features, while for live photo, we align the images based on the background features (outside the saliency mask).
 - Column 1 shows the saliency maps for all frames.
 - Column 2 shows the raw video frames without alignment.
-- For column 3,4,5, we use saliency maps to match only background (non-saliency) features, and align all frames with homography model.
+- For column 3,4,5, we use saliency maps to match only background features, and align all frames with homography model.
 - For Column 4 & 5, we create a fixed background (BG) image by taking median along all frames, then fill the BG pixels (based on the ```BG mask```) in each frame with the corresponding pixels of the median BG image.
 - The ```BG mask``` for column 4 is defined as the sum of the standard deviations of R/G/B channels along all frames, and the ```BG mask``` for column 5 is defined as the union of salency maps of all frames.
 
