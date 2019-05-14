@@ -84,7 +84,13 @@ Next we want to show a succesful example which the image plane is align with the
 - Column 2 shows the raw video frames without alignment.
 - For column 3,4,5, we use saliency maps to match only background features, and align all frames with homography model.
 - For Column 4 & 5, we create a fixed background (BG) image by taking median along all frames, then fill the BG pixels (based on the ```BG mask```) in each frame with the corresponding pixels of the median BG image.
-- The ```BG mask``` for column 4 is defined as the sum of the standard deviations of R/G/B channels along all frames, and the ```BG mask``` for column 5 is defined as the union of salency maps of all frames.
+
+#### Create ```BG mask``` for fixing background  
+- For column 4, the ```BG mask```  is defined as the sum of the standard deviations of R/G/B channels along all frames.
+	- to remove the noise in RGB variance map cuased by illumination change and the small movements of objects (since the alignment is not perfect enough), we apply 2D gaussian filter on the raw RGB variance map, then we obtain the binary BG mask by thresholding.
+	- ![](https://i.imgur.com/wgVJO9a.png) $\xrightarrow[smoothing]{guassian}$ ![](https://i.imgur.com/9izZ3zw.png) $\xrightarrow{threshold}$ ![](https://i.imgur.com/5CAzSC8.png)
+- For column 5, the ```BG mask``` is defined as the union of salency maps of all frames.
+	
 
 #### Example: mediatek
 |          | saliency |     raw        |   only align   |  fix BG w/ RGB variance | fix BG w/ union of saliency |
@@ -99,9 +105,9 @@ Next we want to show a succesful example which the image plane is align with the
 |  BG mask | | | |  ![](imgs/live_photo/stand/out_rgb.png) | ![](imgs/live_photo/stand/out_saliency.png) |
 
 #### Failure Example: tissue
-- In this example, objects on different planes of different depths are predicted as saliency, so the alignment is a little bit worse than the previous example.
+- In this example, many objects on different planes of different depths are predicted as saliency, so the alignment is a little bit worse than the previous example.
 - The ```fix BG w/ union of saliency``` fails as the saliency model only recognize part of tissue.
-- In summary, saliency model is useful for filtering features used to align frames when only one salient object exists. But saliency model are prone to fail when there are multiple objects. In this case, robust estimation algorithms (e.g. RANSAC) is important for fixing the problem.
+- In summary, saliency model is useful for filtering features used to align frames when only one salient object exists. But saliency model are prone to failure when there are multiple objects, and thus SIFT features of various depths would be kept for estimating the homography (as shown in the ```Motion Parallax``` section). In this case, robust estimation algorithms (e.g. RANSAC) is important for fixing the problem. 
 
 |          | saliency |    raw         |   only align   |  fix BG w/ RGB variance | fix BG w/ union of saliency |
 | :------: | :------: | :------------: | :--------------: | :------------------: | :------: |
