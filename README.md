@@ -88,7 +88,8 @@ Next we want to show a succesful example which the image plane is align with the
 #### Create ```BG mask``` for fixing background  
 - For column 4, the ```BG mask```  is defined as the sum of the standard deviations of R/G/B channels along all frames.
 	- to remove the noise in RGB variance map cuased by illumination change and the small movements of objects (since the alignment is not perfect enough), we apply 2D gaussian filter on the raw RGB variance map, then we obtain the binary BG mask by thresholding.
-	- ![](https://i.imgur.com/wgVJO9a.png) $\xrightarrow[smoothing]{guassian}$ ![](https://i.imgur.com/9izZ3zw.png) $\xrightarrow{threshold}$ ![](https://i.imgur.com/5CAzSC8.png) <!-- .element width="30%" -->
+	- <img src="https://i.imgur.com/wgVJO9a.png" width="30%"> $\xrightarrow[smoothing]{guassian}$ <img src="https://i.imgur.com/9izZ3zw.png" width="30%"> $\xrightarrow{threshold}$ <img src="https://i.imgur.com/5CAzSC8.png" width="30%">
+	- ![](https://i.imgur.com/wgVJO9a.png =250x450) $\xrightarrow[smoothing]{guassian}$ ![](https://i.imgur.com/9izZ3zw.png =250x450) $\xrightarrow{threshold}$ ![](https://i.imgur.com/5CAzSC8.png =250x450)
 - For column 5, the ```BG mask``` is defined as the union of salency maps of all frames.
 	
 
