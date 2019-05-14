@@ -4,11 +4,12 @@ This is NTHU CVFX course project 5 of `team 11`. Here we use saliency mask to he
 - motion parallax
 - stop motion
 - live photo
-Also with the help of saliency mask, we can post-processing the image for to fix the color of certain pixels and thus enhance the final effect (detail describe in below).
+
+Also with the help of saliency mask, we can post-processing the image to fix the color of certain pixels and thus enhance the final effect (detail describe in below).
 
 
 ## Saliency mask
-Saliency is defined by the most noticeable part in the image for a human. The use of saliency mask in this multi-view visual effects project is obivious. We use the mask the help deciding which features to track or filter, instead of defining rule (e.g. the translation of the features) to classify the detected features into foreground and background.
+Saliency is defined by the most noticeable part in the image for a human. The use of saliency mask in this multi-view visual effects project is obivious. We use the mask to help decide which features to track or filter, instead of defining rule (e.g. the translation of the features) to classify the detected features into foreground or background.
 
 We use a state-of-the-art saliency prediction model, PiCANet ([paper](https://arxiv.org/abs/1708.06433), [github](https://github.com/Ugness/PiCANet-Implementation), Liu et al., CVPR'18), to yield saliency mask of each image for later 3D visual effects.
 
@@ -18,7 +19,7 @@ We use a state-of-the-art saliency prediction model, PiCANet ([paper](https://ar
 In below, we will present the results of each effect and briefly describe them, showing the results of different setting.
 
 ### Motion Parallax
-In this effect, we want to align the two images such that the main role, the saliency, move as little as possible. To to this, we use the saliency mask the filter all non foreground sift features and align the two images based on the features inside the saliency mask.
+In this effect, we want to align the two images such that the main role, the saliency, move as little as possible. To to this, we use the saliency mask to filter all non foreground sift features and align the two images based on the features inside the saliency mask.
 
 The first example is a `city caffe`, if we simply stack the two image without doing anything we will get:
 
@@ -49,7 +50,7 @@ Yet another example of motion parallax:
 | :--------------: | :--------------: | :------------------: |
 | ![](imgs/motion_parallax/cats/img0_saliency.jpg) | ![](imgs/motion_parallax/cats/img1_saliency.jpg) | ![](imgs/motion_parallax/cats/out_match.jpg) |
 
-We show the result by different alignment algorithm. The translation model have 2 degree of freedom and can only left/right/top/down shift the image. The affine model have dof=5 and can translate, scale and inplane rotate the image. The homography model is the strongest and can align features on different 3D planes. Please *Stop Motion* effect for better understanding the different of the three alignment models.
+We show the result by different alignment algorithm. The translation model have 2 degree of freedom and can only left/right/top/down shift the image. The affine model have dof=5 and can translate, scale and inplane rotate the image. The homography model is the strongest and can align features on different 3D planes. Please see *Stop Motion* effect for better understanding the different of the three alignment models.
 
 | Align by translation (DoF=2) | Align by affine (DoF=5) | Align by homography (DoF=8) |
 | :--------: | :---: | :-----------------: |
@@ -59,14 +60,14 @@ We show the result by different alignment algorithm. The translation model have 
 ### Stop Motion
 The implementation of stop motion effect is very similar to motion parallax. The only different is that we apply the same process like motion parallax in each adjacency frames and align all the image to the middle frame.
 
-We first showing a case `mos burger` to depicting the different of each alignment models:
+We first showing a case `mos burger` to depict the different of each alignment models:
 
 | Do nothing | Align by translation (DoF=2) | Align by affine (DoF=5) | Align by homography (DoF=8) |
 | :--------: | :-----------: | :-----------: | :-----------: |
 | ![](imgs/stop_motion/mos_burger/out_raw.gif) | ![](imgs/stop_motion/mos_burger/out_trans.gif) (impossible to model) | ![](imgs/stop_motion/mos_burger/out_affine.gif) (table center fix) | ![](imgs/stop_motion/mos_burger/out.gif) (table plane fix) |
 
 Result explanation:
-- **Align by translation:** in this failre example, the foreground features are rotate in the image plane and thus make it impossible to model by only shift the image.
+- **Align by translation:** in this failure example, the foreground features are rotate in the image plane and thus make it impossible to model by only shift the image.
 - **Align by affine:** the affine alignment can model image shift, scale and inplane rotation. As a result, fix the center of the table and make it look like rotate alone the table center.
 - **Align by homography:** the homography can model plane to plane transform in 3D space which make the table plane fix in the result.
 
