@@ -86,10 +86,14 @@ Next we want to show a succesful example which the image plane is align with the
 - For Column 4 & 5, we create a fixed background (BG) image by taking median along all frames, then fill the BG pixels (based on the ```BG mask```) in each frame with the corresponding pixels of the median BG image.
 
 #### Create ```BG mask``` for fixing background  
+- For column 5, the ```BG mask``` is defined as the union of salency maps of all frames.
 - For column 4, the ```BG mask```  is defined as the sum of the standard deviations of R/G/B channels along all frames.
 	- to remove the noise in RGB variance map cuased by illumination change and the small movements of objects (since the alignment is not perfect enough), we apply 2D gaussian filter on the raw RGB variance map, then we obtain the binary BG mask by thresholding.
-	- <img src="https://i.imgur.com/wgVJO9a.png" width="30%"> <img src="https://i.imgur.com/9izZ3zw.png" width="30%"> <img src="https://i.imgur.com/5CAzSC8.png" width="30%">
-- For column 5, the ```BG mask``` is defined as the union of salency maps of all frames.
+
+|          raw variance                |           guassian smooth            |            thresholding              |
+| :----------------------------------: | :----------------------------------: | :----------------------------------: |
+| ![](https://i.imgur.com/wgVJO9a.png) | ![](https://i.imgur.com/9izZ3zw.png) | ![](https://i.imgur.com/5CAzSC8.png) |
+
 	
 
 #### Example: mediatek
