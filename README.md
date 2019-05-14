@@ -94,7 +94,7 @@ Next we want to show a succesful example which the image plane is align with the
 
 	
 
-#### Example: mediatek
+#### Example 
 - Column 1 shows the saliency maps for all frames.
 - Column 2 shows the raw video frames without alignment.
 - For column 3,4,5, we use saliency maps to match only background features, and align all frames with homography model.
@@ -104,20 +104,12 @@ Next we want to show a succesful example which the image plane is align with the
 | :------: | :------: | :------------: | :--------------: | :------------------: | :------: |
 |  Result  | ![](imgs/live_photo/mediatek/saliency.gif) | ![](imgs/live_photo/mediatek/out_raw.gif) | ![](imgs/live_photo/mediatek/out.gif) | ![](imgs/live_photo/mediatek/out_rgb.gif) | ![](imgs/live_photo/mediatek/out_saliency.gif) |
 |  BG mask | | | |  ![](imgs/live_photo/mediatek/out_rgb.png) | ![](imgs/live_photo/mediatek/out_saliency.png) |
-
-#### Example: standing human
-|          | saliency |     raw        |   only align   |  fix BG w/ RGB variance | fix BG w/ union of saliency |
-| :------: | :------: | :------------: | :--------------: | :------------------: | :------: |
 |  Result  | ![](imgs/live_photo/stand/saliency.gif) | ![](imgs/live_photo/stand/out_raw.gif) | ![](imgs/live_photo/stand/out.gif) | ![](imgs/live_photo/stand/out_rgb.gif) | ![](imgs/live_photo/stand/out_saliency.gif) |
 |  BG mask | | | |  ![](imgs/live_photo/stand/out_rgb.png) | ![](imgs/live_photo/stand/out_saliency.png) |
-
-#### Failure Example: tissue
-- In this example, many objects on different planes of different depths are predicted as saliency, so the alignment is a little bit worse than the previous example.
-- The ```fix BG w/ union of saliency``` fails as the saliency model only recognize part of tissue.
-- In summary, saliency model is useful for filtering features used to align frames when only one salient object exists. But saliency model are prone to failure when there are multiple objects, and thus SIFT features of various depths would be kept for estimating the homography (as shown in the ```Motion Parallax``` section). In this case, robust estimation algorithms (e.g. RANSAC) is important for fixing the problem. 
-
-|          | saliency |    raw         |   only align   |  fix BG w/ RGB variance | fix BG w/ union of saliency |
-| :------: | :------: | :------------: | :--------------: | :------------------: | :------: |
 |  Result  | ![](imgs/live_photo/tissue/saliency.gif) | ![](imgs/live_photo/tissue/out_raw.gif) | ![](imgs/live_photo/tissue/out.gif) | ![](imgs/live_photo/tissue/out_rgb.gif) | ![](imgs/live_photo/tissue/out_saliency.gif) |
 |  BG mask | | | |  ![](imgs/live_photo/tissue/out_rgb.png) | ![](imgs/live_photo/tissue/out_saliency.png) |
 
+
+#### Discussion
+- In the last example (tissue), many objects on different planes of various depths are predicted as saliency, so the alignment is a little bit worse than the other examples. And the ```fix BG w/ union of saliency``` fails as the saliency model only recognize part of tissue.
+- In summary, saliency model is useful for filtering features used to align frames when only one salient object exists. But saliency model are prone to failure when there are multiple objects, and thus SIFT features of various depths would be kept for estimating the homography (as shown in the ```Motion Parallax``` section). In this case, robust estimation algorithms (e.g. RANSAC) is important for fixing the problem.
