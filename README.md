@@ -80,15 +80,13 @@ Next we want to show a succesful example which the image plane is align with the
 
 ### Live Photo
 - For previous 2 tasks, we use saliency mask to filter out all non-salient sift features, while for live photo, we align the images based on the background features (outside the saliency mask).
-- Column 1 shows the saliency maps for all frames.
-- Column 2 shows the raw video frames without alignment.
-- For column 3,4,5, we use saliency maps to match only background features, and align all frames with homography model.
-- For Column 4 & 5, we create a fixed background (BG) image by taking median along all frames, then fill the BG pixels (based on the ```BG mask```) in each frame with the corresponding pixels of the median BG image.
+- To make the background region look stable, we create a fixed background (BG) image by taking median at each pixel along all frames, then fill the BG pixels (based on the ```BG mask```) in each frame with the corresponding pixels of the median BG image.
 
 #### Create ```BG mask``` for fixing background  
-- For column 5, the ```BG mask``` is defined as the union of salency maps of all frames.
-- For column 4, the ```BG mask```  is defined as the sum of the standard deviations of R/G/B channels along all frames.
-	- to remove the noise in RGB variance map cuased by illumination change and the small movements of objects (since the alignment is not perfect enough), we apply 2D gaussian filter on the raw RGB variance map, then we obtain the binary BG mask by thresholding.
+- We create the ```BG mask``` by 2 different ways:
+	1. the union of salency maps of all frames.
+	2. the sum of the standard deviations of R/G/B channels along all frames.
+		- to remove the noise in RGB variance map cuased by illumination change and the small movements of objects (since the alignment is not perfect enough), we apply 2D gaussian filter on the raw RGB variance map, then we obtain the binary BG mask by thresholding.
 
 |          raw variance                |           guassian smooth            |            thresholding              |
 | :----------------------------------: | :----------------------------------: | :----------------------------------: |
@@ -97,6 +95,11 @@ Next we want to show a succesful example which the image plane is align with the
 	
 
 #### Example: mediatek
+- Column 1 shows the saliency maps for all frames.
+- Column 2 shows the raw video frames without alignment.
+- For column 3,4,5, we use saliency maps to match only background features, and align all frames with homography model.
+- To stabilize the background reigion, we use BG mask created with RGB variance for column 4, and use the BG mask created with the union of saliency maps for column 5.
+
 |          | saliency |     raw        |   only align   |  fix BG w/ RGB variance | fix BG w/ union of saliency |
 | :------: | :------: | :------------: | :--------------: | :------------------: | :------: |
 |  Result  | ![](imgs/live_photo/mediatek/saliency.gif) | ![](imgs/live_photo/mediatek/out_raw.gif) | ![](imgs/live_photo/mediatek/out.gif) | ![](imgs/live_photo/mediatek/out_rgb.gif) | ![](imgs/live_photo/mediatek/out_saliency.gif) |
